@@ -17,14 +17,25 @@ import java.util.Objects;
 @Slf4j
 public class ProducerController {
     public static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
+
     @GetMapping
-    public List<Producer> listAll() {
-        return Producer.getProducers();
+    public ResponseEntity<List<ProducerGetResponse>> listAll() {
+        var producers = Producer.getProducers();
+        var producerGetResponseList = MAPPER.toProducerGetResponseList(producers);
+        return ResponseEntity.ok(producerGetResponseList);
     }
 
     @GetMapping("{id}")
-    public Producer listAllProducersById(@PathVariable Long id) {
-        return Producer.getProducers().stream().filter(producer -> Objects.equals(producer.getId(), id)).findFirst().orElse(null);
+    public ResponseEntity<ProducerGetResponse> findById(@PathVariable Long id) {
+        log.debug("Searching producer by id: {}", id);
+
+        var producerResponse = Producer.getProducers()
+                .stream()
+                .filter(producer -> Objects.equals(producer.getId(), id))
+                .findFirst()
+                .map(MAPPER::toProducerGetResponse)
+                .orElse(null);
+        return ResponseEntity.status(HttpStatus.OK).body(producerResponse);
     }
 
     @PostMapping(produces = "application/json")
