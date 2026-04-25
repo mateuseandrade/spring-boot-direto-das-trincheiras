@@ -3,6 +3,7 @@ package academy.devdojo.anime_service.controllers;
 import academy.devdojo.anime_service.domain.Anime;
 import academy.devdojo.anime_service.mapper.AnimeMapper;
 import academy.devdojo.anime_service.request.AnimePostRequest;
+import academy.devdojo.anime_service.request.AnimePutRequest;
 import academy.devdojo.anime_service.response.AnimeGetResponse;
 import academy.devdojo.anime_service.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Slf4j
 public class AnimeController {
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+    private static final String ANIME_NOT_FOUND = "Anime not found";
 
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll() {
@@ -36,7 +38,7 @@ public class AnimeController {
                 .filter(anime -> Objects.equals(anime.getId(), id))
                 .findFirst()
                 .map(MAPPER::toAnimeGetResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ANIME_NOT_FOUND));
         return ResponseEntity.ok(animeGetResponse);
     }
 
@@ -55,8 +57,25 @@ public class AnimeController {
         var animeToDelete = Anime.getListaAnimes().stream()
                 .filter(anime -> Objects.equals(anime.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ANIME_NOT_FOUND));
         Anime.getListaAnimes().remove(animeToDelete);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+        log.debug("Updating anime: {}", request);
+
+        var animeToRemove = Anime.getListaAnimes()
+                .stream()
+                .filter(anime -> Objects.equals(anime.getId(), request.getId()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ANIME_NOT_FOUND));
+
+        var animeUpdated = MAPPER.toAnime(request);
+        Anime.getListaAnimes().remove(animeToRemove);
+        Anime.getListaAnimes().add(animeUpdated);
+
         return ResponseEntity.noContent().build();
     }
 
