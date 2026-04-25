@@ -18,5 +18,6 @@ public interface ProducerMapper {
     Producer toProducer(ProducerPostRequest producerPostRequest);
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
+
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producerList);
 }

@@ -6,8 +6,10 @@ import academy.devdojo.anime_service.request.AnimePostRequest;
 import academy.devdojo.anime_service.response.AnimeGetResponse;
 import academy.devdojo.anime_service.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,7 @@ import java.util.Objects;
 @Slf4j
 public class AnimeController {
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll() {
         log.debug("Searching all animes");
@@ -33,7 +36,7 @@ public class AnimeController {
                 .filter(anime -> Objects.equals(anime.getId(), id))
                 .findFirst()
                 .map(MAPPER::toAnimeGetResponse)
-                .orElse(null);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
         return ResponseEntity.ok(animeGetResponse);
     }
 

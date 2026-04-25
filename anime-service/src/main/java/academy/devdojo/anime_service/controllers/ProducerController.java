@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +35,7 @@ public class ProducerController {
                 .filter(producer -> Objects.equals(producer.getId(), id))
                 .findFirst()
                 .map(MAPPER::toProducerGetResponse)
-                .orElse(null);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found"));
         return ResponseEntity.status(HttpStatus.OK).body(producerResponse);
     }
 
@@ -47,6 +48,19 @@ public class ProducerController {
         Producer.getProducers().add(producer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.debug("Deleting producer by id: {}", id);
+        var producerToDelete = Producer.getProducers()
+                .stream()
+                .filter(producer -> Objects.equals(producer.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found"));
+        Producer.getProducers().removeIf(producer -> Objects.equals(producer.getId(), id));
+        Producer.getProducers().remove(producerToDelete);
+        return ResponseEntity.noContent().build();
     }
 
 }
