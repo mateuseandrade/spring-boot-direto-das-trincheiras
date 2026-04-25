@@ -23,7 +23,7 @@ public class ProducerController {
     }
 
     @GetMapping("{id}")
-    public Producer listAllProducersById(@PathVariable("id") Long id) {
+    public Producer listAllProducersById(@PathVariable Long id) {
         return Producer.getProducers().stream().filter(producer -> Objects.equals(producer.getId(), id)).findFirst().orElse(null);
     }
 
