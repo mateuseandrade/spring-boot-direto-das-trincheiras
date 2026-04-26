@@ -2,43 +2,45 @@ package academy.devdojo.anime_service.service;
 
 import academy.devdojo.anime_service.domain.Producer;
 import academy.devdojo.anime_service.repository.ProducerHardCodedRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class ProducerService {
-    private final ProducerHardCodedRepository producerHardCodedRepository;
+
+    private final ProducerHardCodedRepository repository;
+
     private static final String PRODUCER_NOT_FOUND = "Producer not found";
 
 
-    public ProducerService() {
-        producerHardCodedRepository = new ProducerHardCodedRepository();
-    }
-
     public List<Producer> findAll() {
-        return producerHardCodedRepository.findAll();
+        return repository.findAll();
     }
 
     public Producer findByIdOrThrowNotFound(Long id) {
-        return producerHardCodedRepository
+        return repository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, PRODUCER_NOT_FOUND));
     }
 
     public Producer save(Producer producer) {
-        return producerHardCodedRepository.save(producer);
+        return repository.save(producer);
     }
 
     public void delete(Long id) {
         var producer = findByIdOrThrowNotFound(id);
-        producerHardCodedRepository.delete(producer);
+        repository.delete(producer);
     }
 
     public void update(Producer producerToUpdate) {
         var producer = findByIdOrThrowNotFound(producerToUpdate.getId());
         producerToUpdate.setCreatedAt(producer.getCreatedAt());
-        producerHardCodedRepository.update(producerToUpdate);
+        repository.update(producerToUpdate);
     }
 
 }

@@ -6,6 +6,7 @@ import academy.devdojo.anime_service.request.ProducerPutRequest;
 import academy.devdojo.anime_service.response.ProducerGetResponse;
 import academy.devdojo.anime_service.response.ProducerPostResponse;
 import academy.devdojo.anime_service.service.ProducerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,14 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/producers")
 @Slf4j
+@RequiredArgsConstructor
 public class ProducerController {
     public static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
-    private final ProducerService producerService;
-
-    public ProducerController() {
-        this.producerService = new ProducerService();
-    }
+    private final ProducerService service;
 
     @GetMapping
     public ResponseEntity<List<ProducerGetResponse>> listAll() {
-        var producers = producerService.findAll();
+        var producers = service.findAll();
         var producerGetResponses = MAPPER.toProducerGetResponseList(producers);
         return ResponseEntity.ok(producerGetResponses);
     }
@@ -35,7 +33,7 @@ public class ProducerController {
     public ResponseEntity<ProducerGetResponse> findById(@PathVariable Long id) {
         log.debug("Searching producer by id: {}", id);
 
-        var producer = producerService.findByIdOrThrowNotFound(id);
+        var producer = service.findByIdOrThrowNotFound(id);
         var producerGetResponse = MAPPER.toProducerGetResponse(producer);
 
         return ResponseEntity.status(HttpStatus.OK).body(producerGetResponse);
@@ -45,7 +43,7 @@ public class ProducerController {
     public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
 
         var producer = MAPPER.toProducer(producerPostRequest);
-        var producerSaved = producerService.save(producer);
+        var producerSaved = service.save(producer);
         var producerGetResponse = MAPPER.toProducerPostResponse(producerSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(producerGetResponse);
@@ -53,14 +51,14 @@ public class ProducerController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        producerService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
         var producerToUpdate = MAPPER.toProducer(request);
-        producerService.update(producerToUpdate);
+        service.update(producerToUpdate);
         return ResponseEntity.noContent().build();
     }
 
