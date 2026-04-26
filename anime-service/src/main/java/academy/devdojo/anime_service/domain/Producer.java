@@ -9,9 +9,12 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Producer {
+
     private String name;
+
     @EqualsAndHashCode.Include
     private Long id;
+
     private LocalDateTime createdAt;
 
 }

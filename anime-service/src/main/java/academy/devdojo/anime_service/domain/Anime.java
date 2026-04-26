@@ -1,21 +1,17 @@
 package academy.devdojo.anime_service.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Anime {
+
     private String name;
+
+    @EqualsAndHashCode.Include
     private Long id;
-
-    @Getter
-    @Setter
-    private static List<Anime> listaAnimes = new ArrayList<>();
-
 }

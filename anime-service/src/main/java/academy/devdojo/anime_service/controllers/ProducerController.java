@@ -52,18 +52,14 @@ public class ProducerController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.debug("Deleting producer by id: {}", id);
         producerService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
-        log.debug("Updating producer: {}", request);
-
         var producerToUpdate = MAPPER.toProducer(request);
         producerService.update(producerToUpdate);
-
         return ResponseEntity.noContent().build();
     }
 
