@@ -1,6 +1,9 @@
 package academy.devdojo.anime_service.repository;
 
 import academy.devdojo.anime_service.domain.Producer;
+import external.dependency.Connection;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -8,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Repository
+@RequiredArgsConstructor
 public class ProducerHardCodedRepository {
     private static final List<Producer> PRODUCER = new ArrayList<>();
+    private final Connection connection;
 
     static {
         var mappa = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now());
@@ -26,6 +32,7 @@ public class ProducerHardCodedRepository {
     }
 
     public Optional<Producer> findById(Long id) {
+        log.debug(connection);
         return PRODUCER.stream().filter(producer -> producer.getId().equals(id)).findFirst();
     }
 
