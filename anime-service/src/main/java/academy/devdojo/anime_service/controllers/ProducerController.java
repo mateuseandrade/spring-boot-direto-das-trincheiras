@@ -19,13 +19,13 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ProducerController {
-    public static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
+    public final ProducerMapper mapper;
     private final ProducerService service;
 
     @GetMapping
     public ResponseEntity<List<ProducerGetResponse>> listAll() {
         var producers = service.findAll();
-        var producerGetResponses = MAPPER.toProducerGetResponseList(producers);
+        var producerGetResponses = mapper.toProducerGetResponseList(producers);
         return ResponseEntity.ok(producerGetResponses);
     }
 
@@ -34,7 +34,7 @@ public class ProducerController {
         log.debug("Searching producer by id: {}", id);
 
         var producer = service.findByIdOrThrowNotFound(id);
-        var producerGetResponse = MAPPER.toProducerGetResponse(producer);
+        var producerGetResponse = mapper.toProducerGetResponse(producer);
 
         return ResponseEntity.status(HttpStatus.OK).body(producerGetResponse);
     }
@@ -42,9 +42,9 @@ public class ProducerController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
 
-        var producer = MAPPER.toProducer(producerPostRequest);
+        var producer = mapper.toProducer(producerPostRequest);
         var producerSaved = service.save(producer);
-        var producerGetResponse = MAPPER.toProducerPostResponse(producerSaved);
+        var producerGetResponse = mapper.toProducerPostResponse(producerSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(producerGetResponse);
     }
@@ -57,7 +57,7 @@ public class ProducerController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
-        var producerToUpdate = MAPPER.toProducer(request);
+        var producerToUpdate = mapper.toProducer(request);
         service.update(producerToUpdate);
         return ResponseEntity.noContent().build();
     }
