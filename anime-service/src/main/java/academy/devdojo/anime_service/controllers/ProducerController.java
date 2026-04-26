@@ -4,6 +4,7 @@ import academy.devdojo.anime_service.mapper.ProducerMapper;
 import academy.devdojo.anime_service.request.ProducerPostRequest;
 import academy.devdojo.anime_service.request.ProducerPutRequest;
 import academy.devdojo.anime_service.response.ProducerGetResponse;
+import academy.devdojo.anime_service.response.ProducerPostResponse;
 import academy.devdojo.anime_service.service.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,11 +42,11 @@ public class ProducerController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
+    public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest) {
 
         var producer = MAPPER.toProducer(producerPostRequest);
         var producerSaved = producerService.save(producer);
-        var producerGetResponse = MAPPER.toProducerGetResponse(producerSaved);
+        var producerGetResponse = MAPPER.toProducerPostResponse(producerSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(producerGetResponse);
     }

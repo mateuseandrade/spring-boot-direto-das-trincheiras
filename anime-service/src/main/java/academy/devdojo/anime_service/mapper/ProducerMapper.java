@@ -4,6 +4,7 @@ import academy.devdojo.anime_service.domain.Producer;
 import academy.devdojo.anime_service.request.ProducerPostRequest;
 import academy.devdojo.anime_service.request.ProducerPutRequest;
 import academy.devdojo.anime_service.response.ProducerGetResponse;
+import academy.devdojo.anime_service.response.ProducerPostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,6 +22,8 @@ public interface ProducerMapper {
     Producer toProducer(ProducerPutRequest request);
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
+    ProducerPostResponse toProducerPostResponse(Producer producerSaved);
 
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producerList);
+
 }
