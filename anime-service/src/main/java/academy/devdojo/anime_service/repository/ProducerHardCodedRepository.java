@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,34 +13,25 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class ProducerHardCodedRepository {
-    private static final List<Producer> PRODUCER = new ArrayList<>();
+    private final ProducerData producerData;
     private final Connection connection;
 
-    static {
-        var mappa = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now());
-        var studioGhibli = Producer.builder().id(2L).name("Studio Ghibli").createdAt(LocalDateTime.now());
-        var toeiAnimation = Producer.builder().id(3L).name("Toei Animation").createdAt(LocalDateTime.now());
-        PRODUCER.add(mappa.build());
-        PRODUCER.add(studioGhibli.build());
-        PRODUCER.add(toeiAnimation.build());
-    }
-
     public List<Producer> findAll() {
-        return PRODUCER;
+        return producerData.getProducers();
     }
 
     public Optional<Producer> findById(Long id) {
         log.debug(connection);
-        return PRODUCER.stream().filter(producer -> producer.getId().equals(id)).findFirst();
+        return producerData.getProducers().stream().filter(producer -> producer.getId().equals(id)).findFirst();
     }
 
     public Producer save(Producer producer) {
-        PRODUCER.add(producer);
+        producerData.getProducers().add(producer);
         return producer;
     }
 
     public void delete(Producer producer) {
-        PRODUCER.remove(producer);
+        producerData.getProducers().remove(producer);
     }
 
     public void update(Producer producer) {
