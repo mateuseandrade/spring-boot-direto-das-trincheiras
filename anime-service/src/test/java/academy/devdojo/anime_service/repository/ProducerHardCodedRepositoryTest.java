@@ -38,6 +38,15 @@ class ProducerHardCodedRepositoryTest {
     void findAll_ReturnAllProducers_WhenSuccessfull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producersList);
         var producers = repository.findAll();
-        Assertions.assertThat(producers).isNotNull().hasSize(producersList.size());
+        Assertions.assertThat(producers).isNotNull().hasSameElementsAs(producersList);
+    }
+
+    @Test
+    @DisplayName("findById returns a producer with given id")
+    void findById_ReturnsProducerById_WhenSuccessfull() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producersList);
+        var expectedProducer = producersList.getFirst();
+        var producer = repository.findById(expectedProducer.getId());
+        Assertions.assertThat(producer).isPresent().contains(expectedProducer);
     }
 }
