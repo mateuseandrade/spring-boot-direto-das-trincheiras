@@ -24,14 +24,14 @@ class ProducerHardCodedRepositoryTest {
     @Mock
     private ProducerData producerData;
 
-    private final List<Producer> producersList = new ArrayList<>();
+    private List<Producer> producersList;
 
     @BeforeEach
     void init() {
         var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
         var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
         var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
-        producersList.addAll(List.of(ufotable, witStudio, studioGhibli));
+        producersList = new ArrayList<>(List.of(ufotable, witStudio, studioGhibli));
     }
 
     @Test
@@ -59,7 +59,7 @@ class ProducerHardCodedRepositoryTest {
     void save_CreatesProducer_WhenSuccessfull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producersList);
 
-        var producerToSave = Producer.builder().id(4L).name("Prodicer to save").createdAt(LocalDateTime.now()).build();
+        var producerToSave = Producer.builder().id(4L).name("Capcom").createdAt(LocalDateTime.now()).build();
         var producer = repository.save(producerToSave);
 
         Assertions.assertThat(producer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();

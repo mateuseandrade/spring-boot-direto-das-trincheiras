@@ -1,40 +1,32 @@
 package academy.devdojo.anime_service.repository;
 
 import academy.devdojo.anime_service.domain.Anime;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@AllArgsConstructor
 public class AnimeHardCodedRepository {
-    private static final List<Anime> ANIME = new ArrayList<>();
-
-    static {
-        var deathNote = Anime.builder().id(1L).name("Death Note");
-        var naruto = Anime.builder().id(2L).name("Naruto");
-        var bleach = Anime.builder().id(3L).name("Bleach");
-        ANIME.add(deathNote.build());
-        ANIME.add(naruto.build());
-        ANIME.add(bleach.build());
-    }
+    private final AnimeData animeData;
 
     public List<Anime> findAll() {
-        return ANIME;
+        return animeData.getAnimes();
     }
 
     public Optional<Anime> findById(Long id) {
-        return ANIME.stream().filter(anime -> anime.getId().equals(id)).findFirst();
+        return animeData.getAnimes().stream().filter(anime -> anime.getId().equals(id)).findFirst();
     }
 
     public Anime save(Anime anime) {
-        ANIME.add(anime);
+        animeData.getAnimes().add(anime);
         return anime;
     }
 
     public void delete(Anime anime) {
-        ANIME.remove(anime);
+        animeData.getAnimes().remove(anime);
     }
 
     public void update(Anime anime) {
